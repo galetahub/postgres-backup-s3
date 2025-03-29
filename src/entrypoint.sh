@@ -3,7 +3,7 @@
 set -e
 
 if [ -z "$S3_S3V4" ]; then
-  S3_S3V4="no"
+  export S3_S3V4="no"
 fi
 
 if [ -z "$S3_BUCKET" ]; then
@@ -19,8 +19,8 @@ fi
 if [ -z "$POSTGRES_HOST" ]; then
   # https://docs.docker.com/network/links/#environment-variables
   if [ -n "$POSTGRES_PORT_5432_TCP_ADDR" ]; then
-    POSTGRES_HOST=$POSTGRES_PORT_5432_TCP_ADDR
-    POSTGRES_PORT=$POSTGRES_PORT_5432_TCP_PORT
+    export POSTGRES_HOST=$POSTGRES_PORT_5432_TCP_ADDR
+    export POSTGRES_PORT=$POSTGRES_PORT_5432_TCP_PORT
   else
     echo "You need to set the POSTGRES_HOST environment variable."
     exit 1
@@ -38,9 +38,9 @@ if [ -z "$POSTGRES_PASSWORD" ]; then
 fi
 
 if [ -z "$S3_ENDPOINT" ]; then
-  aws_args=""
+  export aws_args=""
 else
-  aws_args="--endpoint-url $S3_ENDPOINT"
+  export aws_args="--endpoint-url $S3_ENDPOINT"
 fi
 
 if [ -n "$S3_ACCESS_KEY_ID" ]; then
