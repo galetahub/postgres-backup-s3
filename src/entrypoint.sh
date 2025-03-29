@@ -1,3 +1,11 @@
+#!/bin/sh
+
+set -e
+
+if [ -z "$S3_S3V4" ]; then
+  S3_S3V4="no"
+fi
+
 if [ -z "$S3_BUCKET" ]; then
   echo "You need to set the S3_BUCKET environment variable."
   exit 1
@@ -45,3 +53,6 @@ fi
 
 export AWS_DEFAULT_REGION=$S3_REGION
 export PGPASSWORD=$POSTGRES_PASSWORD
+
+# start command
+exec "$@"
