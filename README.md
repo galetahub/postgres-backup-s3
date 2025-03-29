@@ -1,4 +1,7 @@
 # Introduction
+
+Stream DB dump direcly to S3 bucket
+
 This project provides Docker images to periodically back up a PostgreSQL database to AWS S3, and to restore from the backup as needed.
 
 # Usage
