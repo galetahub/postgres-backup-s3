@@ -61,13 +61,13 @@ docker exec <container name> sh restore.sh <timestamp>
 ```sh
 DOCKER_BUILDKIT=1 docker build --build-arg ALPINE_VERSION=3.14 .
 
-docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.18 --build-arg PG_VERSION=12 -t 12 .
-docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.18 --build-arg PG_VERSION=12 -t 12 .
-docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.19 --build-arg PG_VERSION=13 -t 13 .
-docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.19 --build-arg PG_VERSION=14 -t 14 .
-docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.19 --build-arg PG_VERSION=15 -t 15 .
-docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.20 --build-arg PG_VERSION=16 -t 16 .
-docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.21 --build-arg PG_VERSION=17 -t 17 .
+docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.14 --build-arg PG_VERSION=11 -t postgres-backup-s3:11 .
+docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.18 --build-arg PG_VERSION=12 -t postgres-backup-s3:12 .
+docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.19 --build-arg PG_VERSION=13 -t postgres-backup-s3:13 .
+docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.19 --build-arg PG_VERSION=14 -t postgres-backup-s3:14 .
+docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.19 --build-arg PG_VERSION=15 -t postgres-backup-s3:15 .
+docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.20 --build-arg PG_VERSION=16 -t postgres-backup-s3:16 .
+docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.21 --build-arg PG_VERSION=17 -t postgres-backup-s3:17 .
 ```
 ## Run a simple test environment with Docker Compose
 ```sh
