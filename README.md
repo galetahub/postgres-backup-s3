@@ -60,6 +60,14 @@ docker exec <container name> sh restore.sh <timestamp>
 `ALPINE_VERSION` determines Postgres version compatibility. See [`build-and-push-images.yml`](.github/workflows/build-and-push-images.yml) for the latest mapping.
 ```sh
 DOCKER_BUILDKIT=1 docker build --build-arg ALPINE_VERSION=3.14 .
+
+docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.18 --build-arg PG_VERSION=12 -t 12 .
+docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.18 --build-arg PG_VERSION=12 -t 12 .
+docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.19 --build-arg PG_VERSION=13 -t 13 .
+docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.19 --build-arg PG_VERSION=14 -t 14 .
+docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.19 --build-arg PG_VERSION=15 -t 15 .
+docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.20 --build-arg PG_VERSION=16 -t 16 .
+docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.21 --build-arg PG_VERSION=17 -t 17 .
 ```
 ## Run a simple test environment with Docker Compose
 ```sh
