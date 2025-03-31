@@ -51,4 +51,4 @@ pg_restore -h "$POSTGRES_HOST" \
 # Clean up
 rm db.dump
 
-echo -e "\033[32mRestore complete 🚀.\033[0m"
+echo -e "\033[32mRestore completed successfully 🚀.\033[0m"

@@ -25,4 +25,4 @@ pg_dump -h "$POSTGRES_HOST" \
         -d "$POSTGRES_DATABASE" \
         $PGDUMP_EXTRA_OPTS | aws s3 cp - "$s3_uri_base"
 
-echo -e "\033[32mBackup complete 🚀.\033[0m"
+echo -e "\033[32mBackup completed successfully 🚀.\033[0m"
