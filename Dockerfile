@@ -13,5 +13,3 @@ COPY src/ .
 RUN chmod +x -R /opt/utils/
 
 ENTRYPOINT ["/opt/utils/entrypoint.sh"]
-
-CMD ["sh", "/opt/utils/run.sh"]

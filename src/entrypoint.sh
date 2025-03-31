@@ -55,4 +55,4 @@ export AWS_DEFAULT_REGION=$S3_REGION
 export PGPASSWORD=$POSTGRES_PASSWORD
 
 # start command
-exec "$@"
+exec /opt/utils/run.sh "$@"

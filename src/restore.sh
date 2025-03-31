@@ -1,6 +1,6 @@
 #! /bin/sh
 
-set -u # `-e` omitted intentionally, but i can't remember why exactly :'(
+set -u
 set -o pipefail
 
 s3_uri_base="s3://${S3_BUCKET}/${S3_PREFIX}"
@@ -11,32 +11,44 @@ else
   file_type=".dump.gpg"
 fi
 
+if [ -z "$S3_PREFIX" ]; then
+  export DESTINATION="s3://${S3_BUCKET}"
+else
+  export DESTINATION="s3://${S3_BUCKET}/${S3_PREFIX}"
+fi
+
 if [ $# -eq 1 ]; then
   timestamp="$1"
-  key_suffix="${POSTGRES_DATABASE}_${timestamp}${file_type}"
+  key_suffix="${POSTGRES_DATABASE}_${timestamp}"
 else
-  echo "Finding latest backup..."
+  echo "\033[33mFinding latest backup...\033[0m"
   key_suffix=$(
-    aws $aws_args s3 ls "${s3_uri_base}/${POSTGRES_DATABASE}" \
+    aws $aws_args s3 ls "${DESTINATION}/${POSTGRES_DATABASE}" \
       | sort \
       | tail -n 1 \
       | awk '{ print $4 }'
   )
 fi
 
-echo "Fetching backup from S3..."
-aws $aws_args s3 cp "${s3_uri_base}/${key_suffix}" "db${file_type}"
+s3_uri_base="${DESTINATION}/${key_suffix}.${file_type}"
+
+echo "\033[33mFetching backup from S3: ${s3_uri_base}\033[0m"
+aws $aws_args s3 cp "${s3_uri_base}" "db${file_type}"
 
 if [ -n "$PASSPHRASE" ]; then
-  echo "Decrypting backup..."
+  echo "\033[33mDecrypting backup...\033[0m"
   gpg --decrypt --batch --passphrase "$PASSPHRASE" db.dump.gpg > db.dump
   rm db.dump.gpg
 fi
 
-conn_opts="-h $POSTGRES_HOST -p $POSTGRES_PORT -U $POSTGRES_USER -d $POSTGRES_DATABASE"
+echo "\033[33mRestoring from backup...\033[0m"
+pg_restore -h "$POSTGRES_HOST" \
+           -p "$POSTGRES_PORT" \
+           -U "$POSTGRES_USER" \
+           -d "$POSTGRES_DATABASE" \
+           $PGRESTORE_EXTRA_OPTS db.dump
 
-echo "Restoring from backup..."
-pg_restore $conn_opts --clean --if-exists db.dump
+# Clean up
 rm db.dump
 
-echo "Restore complete."
+echo -e "\033[32mRestore complete 🚀.\033[0m"

@@ -5,6 +5,7 @@ Stream DB dump direcly to S3 bucket
 This project provides Docker images to periodically back up a PostgreSQL database to AWS S3, and to restore from the backup as needed.
 
 # Usage
+
 ## Backup
 ```yaml
 services:
@@ -16,6 +17,7 @@ services:
 
   backup:
     image: eeshugerman/postgres-backup-s3:16
+    command: schedule
     environment:
       SCHEDULE: '@weekly'     # optional
       BACKUP_KEEP_DAYS: 7     # optional
@@ -38,30 +40,69 @@ services:
 - If `BACKUP_KEEP_DAYS` is set, backups older than this many days will be deleted from S3.
 - Set `S3_ENDPOINT` if you're using a non-AWS S3-compatible storage provider.
 
-## Restore
-> [!CAUTION]
-> DATA LOSS! All database objects will be dropped and re-created.
+## From CLI:
 
-### ... from latest backup
 ```sh
-docker exec <container name> sh restore.sh
+docker run \
+  -e S3_REGION=us-east-1 \
+  -e S3_BUCKET=backups \
+  -e S3_ACCESS_KEY_ID=key \
+  -e S3_SECRET_ACCESS_KEY=secret \
+  -e POSTGRES_HOST=rds.amazonaws.com \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=password \
+  -e POSTGRES_DATABASE=database \
+  -e PGDUMP_EXTRA_OPTS="--no-owner --no-privileges --no-acl" \
+  galetahub/postgres-backup-s3:13
+```
+
+## Restore
+
+> [!CAUTION]
+> DATA LOSS! All database objects will be dropped and re-created (see PGRESTORE_EXTRA_OPTS).
+
+### Restore from latest backup
+
+```sh
+docker run \
+  -e S3_REGION=us-east-1 \
+  -e S3_BUCKET=backups \
+  -e S3_ACCESS_KEY_ID=key \
+  -e S3_SECRET_ACCESS_KEY=secret \
+  -e POSTGRES_HOST=rds.amazonaws.com \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=password \
+  -e POSTGRES_DATABASE=database \
+  -e PGRESTORE_EXTRA_OPTS="--clean --if-exists" \
+  galetahub/postgres-backup-s3:13 restore
 ```
 
 > [!NOTE]
 > If your bucket has more than a 1000 files, the latest may not be restored -- only one S3 `ls` command is used
 
-### ... from specific backup
+### Restore from specific backup
+
 ```sh
-docker exec <container name> sh restore.sh <timestamp>
+docker run \
+  -e S3_REGION=us-east-1 \
+  -e S3_BUCKET=backups \
+  -e S3_ACCESS_KEY_ID=key \
+  -e S3_SECRET_ACCESS_KEY=secret \
+  -e POSTGRES_HOST=rds.amazonaws.com \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=password \
+  -e POSTGRES_DATABASE=database \
+  -e PGRESTORE_EXTRA_OPTS="--clean --if-exists" \
+  galetahub/postgres-backup-s3:13 restore <timestamp>
 ```
 
 # Development
+
 ## Build the image locally
 `ALPINE_VERSION` determines Postgres version compatibility. See [`build-and-push-images.yml`](.github/workflows/build-and-push-images.yml) for the latest mapping.
 ```sh
 DOCKER_BUILDKIT=1 docker build --build-arg ALPINE_VERSION=3.14 .
 
-docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.14 --build-arg PG_VERSION=11 -t postgres-backup-s3:11 .
 docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.18 --build-arg PG_VERSION=12 -t postgres-backup-s3:12 .
 docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.19 --build-arg PG_VERSION=13 -t postgres-backup-s3:13 .
 docker build --platform=linux/x86_64 --build-arg ALPINE_VERSION=3.19 --build-arg PG_VERSION=14 -t postgres-backup-s3:14 .
@@ -77,9 +118,11 @@ docker compose up -d
 ```
 
 # Acknowledgements
+
 This project is a fork and re-structuring of @schickling's [postgres-backup-s3](https://github.com/schickling/dockerfiles/tree/master/postgres-backup-s3) and [postgres-restore-s3](https://github.com/schickling/dockerfiles/tree/master/postgres-restore-s3).
 
 ## Fork goals
+
 These changes would have been difficult or impossible merge into @schickling's repo or similarly-structured forks.
   - dedicated repository
   - automated builds
