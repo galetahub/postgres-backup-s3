@@ -19,7 +19,8 @@ s3_uri_base="${DESTINATION}/${POSTGRES_DATABASE}_${timestamp}.dump"
 echo -e "\033[33mCreating backup of $POSTGRES_DATABASE database...\033[0m"
 echo -e "\033[33mDestination: $s3_uri_base\033[0m"
 
-pg_dump -h "$POSTGRES_HOST" \
+pg_dump -Fc \
+        -h "$POSTGRES_HOST" \
         -p "$POSTGRES_PORT" \
         -U "$POSTGRES_USER" \
         -d "$POSTGRES_DATABASE" \

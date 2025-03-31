@@ -15,7 +15,7 @@ else
   export DESTINATION="s3://${S3_BUCKET}/${S3_PREFIX}"
 fi
 
-if [ -z "$S3_BACKUP"]; then
+if [ -z "$S3_BACKUP" ]; then
   echo -e "\033[33mFinding latest backup...\033[0m"
   key_suffix=$(
     aws $aws_args s3 ls "${DESTINATION}/${POSTGRES_DATABASE}" \
