@@ -102,9 +102,9 @@ docker run \
   galetahub/postgres-backup-s3:13 restore
 ```
 
-## Custom
+## Run command direcly
 
-Run custom command from container
+Run some command from container:
 
 ```sh
 docker run \
@@ -116,7 +116,22 @@ docker run \
   -e POSTGRES_USER=postgres \
   -e POSTGRES_PASSWORD=password \
   -e POSTGRES_DATABASE=database \
-  galetahub/postgres-backup-s3:13 custom pg_dump ...
+  galetahub/postgres-backup-s3:13 pg_dump ...
+```
+
+Run and connect to container:
+
+```sh
+docker run -it \
+  -e S3_REGION=us-east-1 \
+  -e S3_BUCKET=backups \
+  -e S3_ACCESS_KEY_ID=key \
+  -e S3_SECRET_ACCESS_KEY=secret \
+  -e POSTGRES_HOST=rds.amazonaws.com \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=password \
+  -e POSTGRES_DATABASE=database \
+  galetahub/postgres-backup-s3:13 sh
 ```
 
 # Development
