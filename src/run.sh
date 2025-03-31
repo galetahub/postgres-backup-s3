@@ -14,7 +14,7 @@ case "$COMMAND" in
     ;;
 
   restore)
-    sh restore.sh "$2"
+    sh restore.sh
     ;;
 
   schedule)

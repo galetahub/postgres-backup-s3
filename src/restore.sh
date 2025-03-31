@@ -15,10 +15,7 @@ else
   export DESTINATION="s3://${S3_BUCKET}/${S3_PREFIX}"
 fi
 
-if [ $# -eq 1 ]; then
-  timestamp="$1"
-  key_suffix="${POSTGRES_DATABASE}_${timestamp}"
-else
+if [ -z "$S3_BACKUP"]; then
   echo -e "\033[33mFinding latest backup...\033[0m"
   key_suffix=$(
     aws $aws_args s3 ls "${DESTINATION}/${POSTGRES_DATABASE}" \
@@ -26,6 +23,8 @@ else
       | tail -n 1 \
       | awk '{ print $4 }'
   )
+else
+  key_suffix="${S3_BACKUP}"
 fi
 
 s3_uri_base="${DESTINATION}/${key_suffix}${file_type}"

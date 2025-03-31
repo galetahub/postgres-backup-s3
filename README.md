@@ -83,7 +83,9 @@ docker run \
 > [!NOTE]
 > If your bucket has more than a 1000 files, the latest may not be restored -- only one S3 `ls` command is used
 
-### Restore from specific backup
+### Restore from specific backup (env S3_BACKUP)
+
+S3_BACKUP - backup name without file extention (.dump/.dump.gpg)
 
 ```sh
 docker run \
@@ -96,7 +98,8 @@ docker run \
   -e POSTGRES_PASSWORD=password \
   -e POSTGRES_DATABASE=database \
   -e PGRESTORE_EXTRA_OPTS="--clean --if-exists" \
-  galetahub/postgres-backup-s3:13 restore <timestamp>
+  -e S3_BACKUP=database_2025-03-29T20:51:45 \
+  galetahub/postgres-backup-s3:13 restore
 ```
 
 ## Custom
