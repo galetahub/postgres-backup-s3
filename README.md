@@ -7,6 +7,9 @@ This project provides Docker images to periodically back up a PostgreSQL databas
 # Usage
 
 ## Backup
+
+### Docker compose schedule backup
+
 ```yaml
 services:
   postgres:
@@ -40,7 +43,7 @@ services:
 - If `BACKUP_KEEP_DAYS` is set, backups older than this many days will be deleted from S3.
 - Set `S3_ENDPOINT` if you're using a non-AWS S3-compatible storage provider.
 
-## From CLI:
+### From CLI
 
 ```sh
 docker run \
