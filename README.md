@@ -56,7 +56,7 @@ docker run \
   -e POSTGRES_PASSWORD=password \
   -e POSTGRES_DATABASE=database \
   -e PGDUMP_EXTRA_OPTS="--no-owner --no-privileges --no-acl" \
-  galetahub/postgres-backup-s3:13
+  galetahub/postgres-backup-s3:13 backup
 ```
 
 ## Restore
@@ -97,6 +97,23 @@ docker run \
   -e POSTGRES_DATABASE=database \
   -e PGRESTORE_EXTRA_OPTS="--clean --if-exists" \
   galetahub/postgres-backup-s3:13 restore <timestamp>
+```
+
+## Custom
+
+Run custom command from container
+
+```sh
+docker run \
+  -e S3_REGION=us-east-1 \
+  -e S3_BUCKET=backups \
+  -e S3_ACCESS_KEY_ID=key \
+  -e S3_SECRET_ACCESS_KEY=secret \
+  -e POSTGRES_HOST=rds.amazonaws.com \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=password \
+  -e POSTGRES_DATABASE=database \
+  galetahub/postgres-backup-s3:13 custom pg_dump ...
 ```
 
 # Development

@@ -24,6 +24,7 @@ case "$COMMAND" in
   custom)
     echo -e "\033[33mExecuting custom command: $@\033[0m"
     exec "$@"
+    ;;
 
   *)
     echo -e "\033[31mError: Unknown command '$COMMAND'\033[0m"
