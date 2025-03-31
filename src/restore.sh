@@ -3,8 +3,6 @@
 set -u
 set -o pipefail
 
-s3_uri_base="s3://${S3_BUCKET}/${S3_PREFIX}"
-
 if [ -z "$PASSPHRASE" ]; then
   file_type=".dump"
 else
