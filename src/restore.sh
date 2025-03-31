@@ -28,7 +28,7 @@ else
   )
 fi
 
-s3_uri_base="${DESTINATION}/${key_suffix}.${file_type}"
+s3_uri_base="${DESTINATION}/${key_suffix}${file_type}"
 
 echo -e "\033[33mFetching backup from S3: ${s3_uri_base}\033[0m"
 aws $aws_args s3 cp "${s3_uri_base}" "db${file_type}"
