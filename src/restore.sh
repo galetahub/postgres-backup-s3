@@ -1,6 +1,6 @@
 #! /bin/sh
 
-set -u
+set -e
 set -o pipefail
 
 if [ -z "$PASSPHRASE" ]; then
@@ -19,7 +19,7 @@ if [ $# -eq 1 ]; then
   timestamp="$1"
   key_suffix="${POSTGRES_DATABASE}_${timestamp}"
 else
-  echo "\033[33mFinding latest backup...\033[0m"
+  echo -e "\033[33mFinding latest backup...\033[0m"
   key_suffix=$(
     aws $aws_args s3 ls "${DESTINATION}/${POSTGRES_DATABASE}" \
       | sort \
@@ -30,16 +30,16 @@ fi
 
 s3_uri_base="${DESTINATION}/${key_suffix}.${file_type}"
 
-echo "\033[33mFetching backup from S3: ${s3_uri_base}\033[0m"
+echo -e "\033[33mFetching backup from S3: ${s3_uri_base}\033[0m"
 aws $aws_args s3 cp "${s3_uri_base}" "db${file_type}"
 
 if [ -n "$PASSPHRASE" ]; then
-  echo "\033[33mDecrypting backup...\033[0m"
+  echo -e "\033[33mDecrypting backup...\033[0m"
   gpg --decrypt --batch --passphrase "$PASSPHRASE" db.dump.gpg > db.dump
   rm db.dump.gpg
 fi
 
-echo "\033[33mRestoring from backup...\033[0m"
+echo -e "\033[33mRestoring from backup...\033[0m"
 pg_restore -h "$POSTGRES_HOST" \
            -p "$POSTGRES_PORT" \
            -U "$POSTGRES_USER" \
